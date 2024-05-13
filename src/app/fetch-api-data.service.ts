@@ -1,3 +1,4 @@
+// src/app/fetch-api-data.service.ts
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
@@ -14,6 +15,8 @@ export class FetchApiDataService {
  // This will provide HttpClient to the entire class, making it available via this.http
   constructor(private http: HttpClient) {
   }
+
+
 
  // Making the api call for the user registration endpoint
   public userRegistration(userDetails: any): Observable<any> {

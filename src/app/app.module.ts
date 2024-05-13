@@ -16,10 +16,17 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MovieCardComponent } from '../../../../cf-course/full-stack/6-collab-doc/6-4-advanced-angular-part-2/movie-card/movie-card.component';
+import { MovieCardComponent } from '../app/movie-card/movie-card.component';
 import { UserLoginFormComponent } from './user-login-form/user-login-form.component';
+import { WelcomePageComponent } from './welcome-page/welcome-page.component';
+import { RouterModule, Routes } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
-
+const appRoutes: Routes = [
+  { path: 'welcome', component: WelcomePageComponent },
+  { path: 'movies', component: MovieCardComponent },
+  { path: '', redirectTo: 'welcome', pathMatch: 'prefix' },
+];
 
 
 @NgModule({
@@ -27,9 +34,11 @@ import { UserLoginFormComponent } from './user-login-form/user-login-form.compon
     AppComponent,
     UserRegistrationFormComponent,
     MovieCardComponent,
-    UserLoginFormComponent
+    UserLoginFormComponent,
+    WelcomePageComponent
   ],
   imports: [
+    RouterModule.forRoot(appRoutes),
     BrowserModule,
     HttpClientModule,
     FormsModule,
@@ -39,7 +48,8 @@ import { UserLoginFormComponent } from './user-login-form/user-login-form.compon
     MatCardModule,
     MatFormFieldModule,
     MatSnackBarModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatIconModule
   ],
   providers: [
     provideAnimationsAsync()

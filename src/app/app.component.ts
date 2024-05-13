@@ -2,11 +2,10 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserRegistrationFormComponent } from './user-registration-form/user-registration-form.component';
-import { MovieCardComponent } from '../../../../cf-course/full-stack/6-collab-doc/6-4-advanced-angular-part-2/movie-card/movie-card.component';
+import { MovieCardComponent } from '../app/movie-card/movie-card.component';
 import { UserLoginFormComponent } from './user-login-form/user-login-form.component'; // Import the Login Component
 
-
-
+// This is the root component of the app
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
