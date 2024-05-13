@@ -16,6 +16,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MovieCardComponent } from '../../../../cf-course/full-stack/6-collab-doc/6-4-advanced-angular-part-2/movie-card/movie-card.component';
+import { UserLoginFormComponent } from './user-login-form/user-login-form.component';
 
 
 
@@ -23,7 +25,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 @NgModule({
   declarations: [
     AppComponent,
-    UserRegistrationFormComponent
+    UserRegistrationFormComponent,
+    MovieCardComponent,
+    UserLoginFormComponent
   ],
   imports: [
     BrowserModule,
