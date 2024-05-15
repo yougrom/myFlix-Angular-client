@@ -16,16 +16,16 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./welcome-page.component.scss']
 })
 
-  /**
-   * @constructor
-   * @param {MatDialog} dialog - Material dialog service for opening dialogs.
-   */
+/**
+ * @constructor
+ * @param {MatDialog} dialog - Material dialog service for opening dialogs.
+ */
 export class WelcomePageComponent implements OnInit {
   constructor(public dialog: MatDialog) { }
   ngOnInit(): void {
   }
 
-    /**
+  /**
    * Function that will open the dialog when the signup button is clicked.
    * @returns Dialog with the UserRegistrationFormComponent.
    */
@@ -34,11 +34,12 @@ export class WelcomePageComponent implements OnInit {
       width: '380px'
     });
   }
-    /**
+  
+  /**
    * Function that will open the dialog when the login button is clicked.
    * @returns Dialog with the UserLoginFormComponent.
    */
-openUserLoginDialog(): void {
+  openUserLoginDialog(): void {
     this.dialog.open(UserLoginFormComponent, {
       width: '380px'
     });

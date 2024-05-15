@@ -28,5 +28,24 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
+  },
+  "include": [
+    "src/app/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.module.ts",
+    "**/*.config.ts",
+    "**/*.server.ts",
+    "**/*.routes.ts",
+    "**/*.browser.ts"
+  ],
+  "typedocOptions": {
+    "entryPoints": ["./src/app/"],
+    "entryPointStrategy": "expand",
+    "out": "docs",
+    "name": "myFlix Angular Client",
+    "includeVersion": true
   }
 }

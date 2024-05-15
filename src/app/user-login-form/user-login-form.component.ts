@@ -5,7 +5,9 @@ import { FetchApiDataService } from '../fetch-api-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
-//  Component for the user login form.
+/**
+ * Component for the user login form.
+ */
 @Component({
   selector: 'app-user-login-form',
   templateUrl: './user-login-form.component.html',
@@ -13,12 +15,22 @@ import { Router } from '@angular/router';
 })
 export class UserLoginFormComponent implements OnInit {
 
-  // User data input for login.
+    /**
+   * User data input for login.
+   * @type {{ Username: string, Password: string }}
+   */
   @Input() userData = {
     Username: '',
     Password: '',
   };
 
+    /**
+   * Creates an instance of UserLoginFormComponent.
+   * @param {FetchApiDataService} fetchApiData - The service for fetching API data.
+   * @param {MatDialogRef<UserLoginFormComponent>} dialogRef - The reference to the dialog.
+   * @param {MatSnackBar} snackBar - The service for showing snack bar notifications.
+   * @param {Router} router - The Angular Router service.
+   */
   constructor(
     public fetchApiData: FetchApiDataService,
     public dialogRef: MatDialogRef<UserLoginFormComponent>, //The reference to the dialog.
@@ -26,10 +38,18 @@ export class UserLoginFormComponent implements OnInit {
     private router: Router
   ) { }
 
-  //  * Lifecycle hook called after component initialization.
+    /**
+   * Lifecycle hook called after component initialization.
+   */
   ngOnInit(): void { }
 
-  // Logs in the user.
+    /**
+   * Logs in the user.
+   * Sends the user data to the login API and handles the response.
+   * On success, stores the user and token in local storage, closes the dialog,
+   * shows a success notification, and navigates to the movies page.
+   * On failure, shows an error notification.
+   */
   loginUser(): void {
     console.log('Logging in with user data:', this.userData);
 

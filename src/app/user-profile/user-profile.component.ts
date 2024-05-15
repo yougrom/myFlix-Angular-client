@@ -8,6 +8,9 @@ import { DirectorInfoComponent } from '../director-info/director-info.component'
 import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.component';
 import { GenreInfoComponent } from '../genre-info/genre-info.component';
 
+/**
+ * UserProfileComponent is used to display and manage the user's profile.
+ */
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -15,12 +18,23 @@ import { GenreInfoComponent } from '../genre-info/genre-info.component';
 })
 export class UserProfileComponent implements OnInit {
 
+    /**
+   * The user's data including username, email, birthday, and favorite movies.
+   */
   @Input() userData = { Username: "", Email: "", Birthday: "", FavoriteMovies: [] };
 
   user: any = {};
   movies: any[] = [];
   FavoriteMovies: any[] = [];
 
+    /**
+   * Constructs the UserProfileComponent.
+   * 
+   * @param fetchApiData The service to fetch API data.
+   * @param snackBar The service to show snack bar notifications.
+   * @param router The router service to navigate.
+   * @param dialog The dialog service to open dialogs.
+   */
   constructor(
     public fetchApiData: FetchApiDataService,
     public snackBar: MatSnackBar,
@@ -28,11 +42,19 @@ export class UserProfileComponent implements OnInit {
     public dialog: MatDialog
   ) { }
 
+    /**
+   * Initializes the component by fetching the user's profile and favorite movies.
+   */
   ngOnInit(): void {
     this.getProfile();
     this.getFavMovies();
   }
 
+    /**
+   * Retrieves the user data from local storage.
+   * 
+   * @returns The user data from local storage.
+   */
   private getUserFromLocalStorage() {
     if (typeof localStorage !== 'undefined') {
       return JSON.parse(localStorage.getItem('user') || '{}');
@@ -40,6 +62,9 @@ export class UserProfileComponent implements OnInit {
     return null;
   }
 
+    /**
+   * Fetches the user's profile information and their favorite movies.
+   */
   getProfile(): void {
     const user = this.getUserFromLocalStorage();
     if (user) {
@@ -54,6 +79,10 @@ export class UserProfileComponent implements OnInit {
       });
     }
   }
+
+    /**
+   * Updates the user's profile information.
+   */
 
   updateUser(): void {
     this.fetchApiData.editUser(this.userData).subscribe((result) => {
@@ -72,6 +101,9 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+    /**
+   * Deletes the user's profile.
+   */
   deleteUser(): void {
     this.router.navigate(['welcome']).then(() => {
       if (typeof localStorage !== 'undefined') {
@@ -86,6 +118,9 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+    /**
+   * Fetches all movies.
+   */
   getMovies(): void {
     this.fetchApiData.getAllMovies().subscribe((resp: any) => {
       this.movies = resp;
@@ -93,6 +128,14 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+    /**
+   * Opens a dialog with information about the director.
+   * 
+   * @param name The name of the director.
+   * @param bio The biography of the director.
+   * @param birth The birth date of the director.
+   * @param death The death date of the director.
+   */
   openDirectorDialog(name: string, bio: string, birth: string, death: string): void {
     this.dialog.open(DirectorInfoComponent, {
       data: {
@@ -105,6 +148,12 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+    /**
+   * Opens a dialog with information about the genre.
+   * 
+   * @param name The name of the genre.
+   * @param description The description of the genre.
+   */
   openGenreDialog(name: string, description: string): void {
     this.dialog.open(GenreInfoComponent, {
       data: {
@@ -115,6 +164,11 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+    /**
+   * Opens a dialog with the synopsis of a movie.
+   * 
+   * @param description The description of the movie.
+   */
   openSynopsisDialog(description: string): void {
     this.dialog.open(MovieSynopsisComponent, {
       data: {
@@ -124,6 +178,9 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+    /**
+   * Fetches the user's favorite movies.
+   */
   getFavMovies(): void {
     const user = this.getUserFromLocalStorage();
     if (user) {
@@ -135,11 +192,22 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
+    /**
+   * Checks if a movie is a favorite of the user.
+   * 
+   * @param movie The movie to check.
+   * @returns True if the movie is a favorite, false otherwise.
+   */
   isFav(movie: any): boolean {
     const MovieID = movie._id;
     return this.FavoriteMovies.some((favMovie: any) => favMovie === MovieID);
   }
 
+    /**
+   * Deletes a movie from the user's favorite movies.
+   * 
+   * @param movie The movie to delete from favorites.
+   */
   deleteFavMovies(movie: any): void {
     const user = this.getUserFromLocalStorage();
     if (user) {
