@@ -1,34 +1,89 @@
 // src/app/user-profile/user-profile.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { DirectorInfoComponent } from '../director-info/director-info.component';
-import { GenreInfoComponent } from '../genre-info/genre-info.component';
-import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.component';
 import { FetchApiDataService } from '../fetch-api-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DirectorInfoComponent } from '../director-info/director-info.component';
+import { MovieSynopsisComponent } from '../movie-synopsis/movie-synopsis.component';
+import { GenreInfoComponent } from '../genre-info/genre-info.component';
 
 @Component({
-  selector: 'app-movie-card',
-  templateUrl: './movie-card.component.html',
-  styleUrls: ['./movie-card.component.scss']
+  selector: 'app-user-profile',
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.scss']
 })
-export class MovieCardComponent implements OnInit {
+export class UserProfileComponent implements OnInit {
 
-  movies: any[] = [];
+  @Input() userData = { Username: "", Email: "", Birthday: "", FavoriteMovies: [] };
+
   user: any = {};
-  userData = { Username: "", FavoriteMovies: [] };
+  movies: any[] = [];
   FavoriteMovies: any[] = [];
-  isFavMovie: boolean = false;
 
   constructor(
     public fetchApiData: FetchApiDataService,
-    public dialog: MatDialog,
     public snackBar: MatSnackBar,
+    private router: Router,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.getMovies();
+    this.getProfile();
     this.getFavMovies();
+  }
+
+  private getUserFromLocalStorage() {
+    if (typeof localStorage !== 'undefined') {
+      return JSON.parse(localStorage.getItem('user') || '{}');
+    }
+    return null;
+  }
+
+  getProfile(): void {
+    const user = this.getUserFromLocalStorage();
+    if (user) {
+      this.fetchApiData.getOneUser(user.Username).subscribe((response) => {
+        this.user = response;
+        this.userData.Username = this.user.Username;
+        this.userData.Email = this.user.Email;
+        this.userData.Birthday = this.user.Birthday;
+        this.fetchApiData.getAllMovies().subscribe((response) => {
+          this.FavoriteMovies = response.filter((movie: any) => this.user.FavoriteMovies.includes(movie._id));
+        });
+      });
+    }
+  }
+
+  updateUser(): void {
+    this.fetchApiData.editUser(this.userData).subscribe((result) => {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify(result));
+      }
+      this.snackBar.open('User update successful', 'OK', {
+        duration: 2000
+      });
+      this.user = result; // Update local user data
+      this.userData.FavoriteMovies = this.user.FavoriteMovies;
+    }, (error) => {
+      this.snackBar.open('Failed to update user', 'OK', {
+        duration: 2000
+      });
+    });
+  }
+
+  deleteUser(): void {
+    this.router.navigate(['welcome']).then(() => {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.clear();
+      }
+      this.snackBar.open('User successfully deleted.', 'OK', {
+        duration: 2000
+      });
+    });
+    this.fetchApiData.deleteUser().subscribe((result) => {
+      console.log(result);
+    });
   }
 
   getMovies(): void {
@@ -69,13 +124,6 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  getUserFromLocalStorage(): any {
-    if (typeof localStorage !== 'undefined') {
-      return JSON.parse(localStorage.getItem('user') || '{}');
-    }
-    return null;
-  }
-
   getFavMovies(): void {
     const user = this.getUserFromLocalStorage();
     if (user) {
@@ -90,31 +138,6 @@ export class MovieCardComponent implements OnInit {
   isFav(movie: any): boolean {
     const MovieID = movie._id;
     return this.FavoriteMovies.some((favMovie: any) => favMovie === MovieID);
-  }
-
-  toggleFav(movie: any): void {
-    const isFavorite = this.isFav(movie);
-    if (isFavorite) {
-      this.deleteFavMovies(movie);
-    } else {
-      this.addFavMovies(movie);
-    }
-  }
-
-  addFavMovies(movie: any): void {
-    const user = this.getUserFromLocalStorage();
-    if (user) {
-      this.fetchApiData.addFavoriteMovie(user.Username, movie._id).subscribe((result: any) => {
-        this.user.FavoriteMovies.push(movie._id);
-        if (typeof localStorage !== 'undefined') {
-          localStorage.setItem('user', JSON.stringify(this.user));
-        }
-        this.FavoriteMovies = this.user.FavoriteMovies;
-        this.snackBar.open('Movie has been added to your favorites!', 'OK', {
-          duration: 3000,
-        });
-      });
-    }
   }
 
   deleteFavMovies(movie: any): void {
